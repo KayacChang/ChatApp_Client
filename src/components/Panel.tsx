@@ -14,9 +14,9 @@ function Section({ children }: PropsWithChildren<{}>) {
 }
 
 type Props = {
-    header: ReactNode,
-    body: ReactNode,
-    footer: ReactNode,
+    header?: ReactNode,
+    body?: ReactNode,
+    footer?: ReactNode,
 }
 
 export default function Panel({ header, body, footer }: PropsWithChildren<Props>) {

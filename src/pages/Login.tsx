@@ -5,7 +5,7 @@ export default function Login() {
     const [email, setEmail] = useState('')
 
     return <Panel
-        header={"Chat Room"}
+        header={"Login"}
         body={
             <Input
                 id="email"

@@ -1,0 +1,24 @@
+.table {
+  border-collapse: collapse;
+  width: 100%;
+
+  th {
+    text-transform: uppercase;
+  }
+
+  td,
+  th {
+    border-bottom: 1px solid #ddd;
+    padding: 16px 0;
+
+    text-align: center;
+  }
+
+  tbody tr {
+    transition: all 120ms ease-out;
+
+    &:hover {
+      background: #008cba;
+    }
+  }
+}
