@@ -1,10 +1,10 @@
 import React from 'react';
 import styles from './App.module.scss';
-import { Room } from './pages';
+import { Chat } from './pages';
 
 function App() {
   return <div className={styles.app}>
-    <Room />
+    <Chat />
   </div>
 }
 

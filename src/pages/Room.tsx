@@ -1,6 +1,5 @@
 import React from 'react';
-import { Panel, List } from '../components';
-
+import { Panel, List, Header } from '../components';
 
 export default function Room() {
     const data = [
@@ -13,7 +12,9 @@ export default function Room() {
     ]
 
     return <Panel
-        header={"Room"}
+        header={
+            <Header title="Room" />
+        }
         body={
             <List
                 data={data.map((data) => ({ ...data, key: `${data.id}_${data.title}` }))}

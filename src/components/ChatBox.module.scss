@@ -1,0 +1,19 @@
+.chatbox {
+  textarea {
+    width: 100%;
+    resize: none;
+    border: none;
+
+    transition: all 500ms ease-out;
+    height: 4vh;
+
+    &:focus {
+      height: 6vh;
+    }
+  }
+}
+
+.buttongroup {
+  display: flex;
+  justify-content: flex-end;
+}

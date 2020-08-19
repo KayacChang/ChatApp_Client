@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { Panel, Input, Button } from '../components';
+import { Panel, Input, Button, Header } from '../components';
 
 export default function Login() {
     const [email, setEmail] = useState('')
 
     return <Panel
-        header={"Login"}
+        header={
+            <Header title="Login" />
+        }
         body={
             <Input
                 id="email"
@@ -18,5 +20,4 @@ export default function Login() {
             <Button onClick={() => console.log(email)}>Join</Button>
         }
     />
-
 }

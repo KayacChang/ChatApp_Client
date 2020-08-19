@@ -1,12 +1,6 @@
 import React, { PropsWithChildren, ReactNode } from "react"
 import styles from './Panel.module.scss'
 
-function Header({ children }: PropsWithChildren<{}>) {
-    return <div className={styles.header}>
-        <h2>{children}</h2>
-    </div>
-}
-
 function Section({ children }: PropsWithChildren<{}>) {
     return <div className={styles.section}>
         {children}
@@ -21,9 +15,9 @@ type Props = {
 
 export default function Panel({ header, body, footer }: PropsWithChildren<Props>) {
     return <div className={styles.panel} >
-        <Header>
+        <Section>
             {header}
-        </Header>
+        </Section>
         <Section>
             {body}
         </Section>
