@@ -1,0 +1,21 @@
+$default: 1rem;
+
+.shadow {
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.button {
+  border: none;
+  border-radius: $default / 2;
+
+  background: #008cba;
+  padding: $default;
+
+  font-size: $default;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-weight: 500;
+
+  @extend .shadow;
+}

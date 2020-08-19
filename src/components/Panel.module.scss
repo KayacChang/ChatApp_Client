@@ -1,0 +1,24 @@
+$default: 1rem;
+
+.panel {
+  background: white;
+  width: 80vw;
+  border-radius: 1rem;
+  padding: 32px;
+
+  display: flex;
+  flex-direction: column;
+
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.header {
+  margin: $default 0;
+  text-transform: uppercase;
+}
+
+.section {
+  margin: $default 0;
+  display: flex;
+  flex-direction: column;
+}
