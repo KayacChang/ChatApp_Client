@@ -7,12 +7,14 @@ type Props = {
     onBack?: () => void,
     title: string,
 }
-export default function Header({ title, onBack = () => { } }: Props) {
+export default function Header({ title, onBack }: Props) {
     return <div className={styles.header}>
-        <IconButton
-            icon={<FiChevronLeft
-                size={28}
-                onClick={onBack} />} />
+        {
+            onBack && <IconButton
+                icon={<FiChevronLeft
+                    size={28}
+                    onClick={onBack} />} />
+        }
 
         <h2>{title}</h2>
     </div>

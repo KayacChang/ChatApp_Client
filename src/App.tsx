@@ -1,10 +1,10 @@
 import React from 'react';
 import styles from './App.module.scss';
-import { Chat } from './pages';
+import { Login } from './pages';
 
 function App() {
   return <div className={styles.app}>
-    <Chat />
+    <Login />
   </div>
 }
 

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Panel, Input, Button, Header } from '../components';
+import { login } from '../backend';
 
 export default function Login() {
     const [email, setEmail] = useState('')
@@ -17,7 +18,7 @@ export default function Login() {
                 value={email} />
         }
         footer={
-            <Button onClick={() => console.log(email)}>Join</Button>
+            <Button onClick={() => login(email)}>Join</Button>
         }
     />
 }
