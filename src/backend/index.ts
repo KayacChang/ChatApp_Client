@@ -1,22 +1,30 @@
 enum TYPE {
   USER = "USER",
   ROOM = "ROOM",
+  MSG = "MSG",
 }
 
 enum ACTION {
   JOIN = "JOIN",
   UPDATE = "UPDATE",
   LEAVE = "LEAVE",
+  SEND = "SEND",
+  RECEIVE = "RECEIVE",
 }
 
-interface Event {
+type Event = {
   type: TYPE;
   action: ACTION;
-  from: string;
-  message?: any;
-}
+  status?: "OK" | "ERROR";
+  data?: any;
+};
 
-type Listener = (event: Event) => void;
+type Msg = {
+  from: string;
+  message: string;
+};
+
+type Listener = (data: any) => void;
 
 let socket: WebSocket | undefined;
 const listeners: Record<string, Listener[]> = {};
@@ -26,12 +34,17 @@ function send(event: Event) {
 }
 
 function onMessage(event: Event) {
+  if (event.status === "ERROR") {
+    console.error(event);
+    return;
+  }
+
   const name = `${event.type}_${event.action}`;
 
-  listeners[name]?.forEach((func) => func(event));
+  listeners[name]?.forEach((func) => func(event.data));
 }
 
-export function on(event: string, listener: Listener) {
+export function on<T>(event: string, listener: Listener) {
   const group = (listeners[event] || []).concat(listener);
 
   listeners[event] = group;
@@ -43,19 +56,25 @@ export function on(event: string, listener: Listener) {
   };
 }
 
-export function joinRoom(username: string, roomID: string) {
+export function sendMsg(data: Msg) {
+  send({
+    type: TYPE.MSG,
+    action: ACTION.SEND,
+    data,
+  });
+}
+
+export function joinRoom(roomID: string) {
   send({
     type: TYPE.ROOM,
     action: ACTION.JOIN,
-    from: username,
-    message: roomID,
+    data: { room_id: roomID },
   });
 }
-export function leaveRoom(username: string) {
+export function leaveRoom() {
   send({
     type: TYPE.ROOM,
     action: ACTION.LEAVE,
-    from: username,
   });
 }
 
@@ -63,15 +82,14 @@ export function login(username: string) {
   send({
     type: TYPE.USER,
     action: ACTION.JOIN,
-    from: username,
+    data: { username },
   });
 }
 
-export function logout(username: string) {
+export function logout() {
   send({
     type: TYPE.USER,
     action: ACTION.LEAVE,
-    from: username,
   });
 }
 

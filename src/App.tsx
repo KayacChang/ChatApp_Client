@@ -16,38 +16,32 @@ function Router() {
   const roomDispatch = useRoomDispatch()
 
   useEffect(() => {
-    on('USER_JOIN', ({ from, message }) => {
-      if (message === 'User Join Success') {
-        pageDispatch({ type: 'next', page: 'room' })
-        userDispatch({ type: 'login', name: from })
-      }
+    on('USER_JOIN', ({ username }) => {
+      pageDispatch({ type: 'next', page: 'room' })
+      userDispatch({ type: 'login', name: username })
     })
 
-    on('USER_LEAVE', ({ message }) => {
-      if (message === 'User Leave Success') {
-        pageDispatch({ type: 'prev' })
-        userDispatch({ type: 'logout' })
-      }
+    on('USER_LEAVE', () => {
+      pageDispatch({ type: 'prev' })
+      userDispatch({ type: 'logout' })
     })
 
-    on('ROOM_JOIN', ({ message }) => {
-      if (message === 'Room Join Success') {
-        pageDispatch({ type: 'next', page: 'chat' })
-      }
+    on('ROOM_JOIN', () => {
+      pageDispatch({ type: 'next', page: 'chat' })
     })
 
-    on('ROOM_LEAVE', ({ message }) => {
-      if (message === 'Room Leave Success') {
-        pageDispatch({ type: 'prev' })
-      }
+    on('ROOM_LEAVE', () => {
+      pageDispatch({ type: 'prev' })
     })
 
-    on('ROOM_UPDATE', ({ message }) => {
-      const rooms = (message as RoomData[])
-        .map(({ id, title, clients }) => ({ id, title, people: clients.length }))
-
-      roomDispatch({ type: 'update', rooms })
+    on('ROOM_UPDATE', ({ rooms }) => {
+      roomDispatch({
+        type: 'update',
+        rooms: (rooms as RoomData[])
+          .map(({ id, title, clients }) => ({ id, title, people: clients.length }))
+      })
     })
+
   }, [pageDispatch, userDispatch, roomDispatch])
 
   const current = history[history.length - 1]

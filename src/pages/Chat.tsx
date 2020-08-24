@@ -1,54 +1,56 @@
-import React, { useState, useCallback } from 'react'
-import { v4 as uuid } from 'uuid'
+import React, { useEffect, useState } from 'react'
 import { Panel, Dialog, Scroll, ChatBox, Header } from '../components'
-import { leaveRoom } from '../backend'
+import { leaveRoom, sendMsg, on } from '../backend'
 import { useUserState } from '../contexts/user'
 
-function ChatTime(data: Date) {
-    return data.toLocaleString()
+type MsgData = {
+    id: string,
+    name: string,
+    message: string,
+    time: string
+}
+
+type Msg = {
+    key: string
+    name: string
+    message: string
+    time: Date
 }
 
 export default function Chat() {
     const { name } = useUserState()
+    const [messages, setMessage] = useState<Msg[]>([])
 
-    const [msg, setMsg] = useState([
-        { key: uuid(), name: 'kayac', message: 'write some message...', time: ChatTime(new Date()) },
-        { key: uuid(), name: 'aya', message: 'write some message...', time: ChatTime(new Date()) },
-        { key: uuid(), name: 'kayac', message: 'write some message...', time: ChatTime(new Date()) },
-        { key: uuid(), name: 'kayac', message: 'write some message...', time: ChatTime(new Date()) },
-        { key: uuid(), name: 'kayac', message: 'write some message...', time: ChatTime(new Date()) },
-        { key: uuid(), name: 'kayac', message: 'write some message...', time: ChatTime(new Date()) },
-        { key: uuid(), name: 'kayac', message: 'write some message...', time: ChatTime(new Date()) },
-    ])
+    useEffect(() => {
+        return on('MSG_RECEIVE', ({ id, name, message, time }: MsgData) => {
+            const msg: Msg = { key: id, name, message, time: new Date(time) };
 
-    const onSend = useCallback((message) => setMsg((msg) =>
-        msg.concat({
-            key: uuid(), name: 'kayac', message, time: ChatTime(new Date())
+            setMessage((messages) => messages.concat(msg))
         })
-    ), [setMsg])
+    }, [setMessage])
 
     return <Panel
         header={
-            <Header title="Chat" onClick={() => leaveRoom(name)} />
+            <Header title="Chat" onClick={() => leaveRoom()} />
         }
         body={
             <Scroll>
                 {
-                    msg.map(({ key, name, message, time }, index) => (
+                    messages.map(({ key, name, message, time }, index) => (
                         <Dialog
                             style={{
-                                overflowAnchor: (msg.length - 1 === index) ? 'auto' : 'none'
+                                overflowAnchor: (message.length - 1 === index) ? 'auto' : 'none'
                             }}
                             key={key}
                             name={name}
                             message={message}
-                            time={time} />
+                            time={time.toLocaleString()} />
                     ))
                 }
             </Scroll>
         }
         footer={
-            <ChatBox onSend={onSend} />
+            <ChatBox onSend={(msg) => sendMsg({ from: name, message: msg })} />
         }
     />
 }
