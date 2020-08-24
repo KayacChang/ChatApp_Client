@@ -1,12 +1,16 @@
 import React, { useState, useCallback } from 'react'
 import { v4 as uuid } from 'uuid'
 import { Panel, Dialog, Scroll, ChatBox, Header } from '../components'
+import { leaveRoom } from '../backend'
+import { useUserState } from '../contexts/user'
 
 function ChatTime(data: Date) {
     return data.toLocaleString()
 }
 
 export default function Chat() {
+    const { name } = useUserState()
+
     const [msg, setMsg] = useState([
         { key: uuid(), name: 'kayac', message: 'write some message...', time: ChatTime(new Date()) },
         { key: uuid(), name: 'aya', message: 'write some message...', time: ChatTime(new Date()) },
@@ -25,7 +29,7 @@ export default function Chat() {
 
     return <Panel
         header={
-            <Header title="Chat" />
+            <Header title="Chat" onClick={() => leaveRoom(name)} />
         }
         body={
             <Scroll>

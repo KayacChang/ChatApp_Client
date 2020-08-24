@@ -1,24 +1,23 @@
 import React from 'react';
 import { Panel, List, Header } from '../components';
+import { joinRoom, logout } from '../backend';
+import { useUserState } from '../contexts/user';
 
-export default function Room() {
-    const data = [
-        { id: 1, title: 'name', people: '16 / 16' },
-        { id: 2, title: 'name', people: '16 / 16' },
-        { id: 3, title: 'name', people: '16 / 16' },
-        { id: 4, title: 'name', people: '16 / 16' },
-        { id: 5, title: 'name', people: '16 / 16' },
-        { id: 6, title: 'name', people: '16 / 16' },
-    ]
+type Room = { id: string, title: string, people: number }
+type Props = {
+    rooms: Room[]
+}
+export default function Room({ rooms }: Props) {
+    const { name } = useUserState()
 
     return <Panel
         header={
-            <Header title="Room" />
+            <Header title="Room" onClick={() => logout(name)} />
         }
         body={
-            <List
-                data={data.map((data) => ({ ...data, key: `${data.id}_${data.title}` }))}
-                onClick={(data) => console.log(data)} />
+            (rooms.length > 0) && <List
+                data={rooms.map((data) => ({ ...data, key: `${data.id}_${data.title}` }))}
+                onClick={(data: Room) => joinRoom(name, data.id)} />
         }
     />
 }

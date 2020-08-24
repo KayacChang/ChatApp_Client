@@ -40,8 +40,3 @@ export default function Context<S, A>(reducer: Reducer<S, A>) {
 
     return { Provider, useState, useDispatch }
 }
-
-
-
-
-

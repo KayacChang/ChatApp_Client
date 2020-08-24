@@ -2,23 +2,18 @@ import React from "react"
 import styles from './Header.module.scss'
 import { FiChevronLeft } from "react-icons/fi"
 import { IconButton } from "."
-import { usePageState, usePageDispatch } from "../contexts/page"
 
 type Props = {
     title: string,
+    onClick?: () => void
 }
-export default function Header({ title }: Props) {
-    const { history } = usePageState()
-    const dispatch = usePageDispatch()
-
-    const canBack = history.length > 1;
-
+export default function Header({ title, onClick }: Props) {
     return <div className={styles.header}>
         {
-            (canBack) && <IconButton
+            (onClick) && <IconButton
                 icon={<FiChevronLeft
                     size={28}
-                    onClick={() => dispatch({ type: 'prev' })} />} />
+                    onClick={onClick} />} />
         }
 
         <h2>{title}</h2>

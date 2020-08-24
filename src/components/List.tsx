@@ -1,16 +1,16 @@
 import React from 'react'
 import styles from './List.module.scss'
 
-type Data = {
+interface Data {
     key: string,
 }
 
-type Props = {
-    data: Data[],
-    onClick?: (data: Data) => void,
+type Props<T extends Data> = {
+    data: T[],
+    onClick?: (data: Omit<T, "key">) => void,
 }
 
-export default function List({ data, onClick = () => { } }: Props) {
+export default function List<T extends Data>({ data, onClick = () => { } }: Props<T>) {
     return <table className={styles.table}>
         <thead>
             <tr>
@@ -26,9 +26,9 @@ export default function List({ data, onClick = () => { } }: Props) {
         <tbody>
             {
                 data.map(({ key, ...data }) => (
-                    <tr key={key} onClick={() => onClick({ key, ...data })}>
+                    <tr key={key} onClick={() => onClick(data)}>
                         {
-                            Object.values(data)
+                            Object.values<any>(data)
                                 .map((value) => (
                                     <td key={key + value}>{value}</td>
                                 ))

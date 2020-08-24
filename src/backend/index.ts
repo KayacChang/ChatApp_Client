@@ -5,6 +5,8 @@ enum TYPE {
 
 enum ACTION {
   JOIN = "JOIN",
+  UPDATE = "UPDATE",
+  LEAVE = "LEAVE",
 }
 
 interface Event {
@@ -14,25 +16,47 @@ interface Event {
   message?: any;
 }
 
+type Listener = (event: Event) => void;
+
 let socket: WebSocket | undefined;
+const listeners: Record<string, Listener[]> = {};
 
 function send(event: Event) {
   socket?.send(JSON.stringify(event));
 }
 
-type Listener = (event: Event) => void;
-const listeners: Record<string, Listener[]> = {};
-
 function onMessage(event: Event) {
-  if (event.type === TYPE.USER && event.action === ACTION.JOIN) {
-    listeners["userjoin"]?.forEach((func) => func(event));
-  }
+  const name = `${event.type}_${event.action}`;
+
+  listeners[name]?.forEach((func) => func(event));
 }
 
 export function on(event: string, listener: Listener) {
   const group = (listeners[event] || []).concat(listener);
 
   listeners[event] = group;
+
+  return () => {
+    const group = listeners[event].filter((func) => func !== listener);
+
+    listeners[event] = group;
+  };
+}
+
+export function joinRoom(username: string, roomID: string) {
+  send({
+    type: TYPE.ROOM,
+    action: ACTION.JOIN,
+    from: username,
+    message: roomID,
+  });
+}
+export function leaveRoom(username: string) {
+  send({
+    type: TYPE.ROOM,
+    action: ACTION.LEAVE,
+    from: username,
+  });
 }
 
 export function login(username: string) {
@@ -43,10 +67,16 @@ export function login(username: string) {
   });
 }
 
+export function logout(username: string) {
+  send({
+    type: TYPE.USER,
+    action: ACTION.LEAVE,
+    from: username,
+  });
+}
+
 export function connect(url: string) {
   socket = new WebSocket(url);
-
-  socket.onopen = (event) => {};
 
   socket.onmessage = (event) => {
     onMessage(JSON.parse(event.data));

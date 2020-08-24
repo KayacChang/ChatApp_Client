@@ -12,7 +12,7 @@ function pageReducer(state: State, action: Action) {
     }
 
     if (action.type === 'prev') {
-        return { history: state.history.splice(-1, 1) }
+        return { history: state.history.slice(0, -1) }
     }
 
     return state
