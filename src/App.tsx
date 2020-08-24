@@ -1,12 +1,22 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styles from './App.module.scss';
 import { Login, Chat, Room } from './pages';
-import { PageContextProvider, usePageState } from './contexts/page'
+import { PageContextProvider, usePageState, usePageDispatch } from './contexts/page'
+import { on } from './backend';
 
 function Router() {
   const { history } = usePageState()
-  const current = history[history.length - 1]
+  const dispatch = usePageDispatch()
 
+  useEffect(() => {
+    on('userjoin', ({ message }) => {
+      if (message === 'User Join Success') {
+        dispatch({ type: 'next', page: 'room' })
+      }
+    })
+  }, [dispatch])
+
+  const current = history[history.length - 1]
   switch (current) {
     case 'login':
       return <Login />
@@ -25,7 +35,7 @@ function Router() {
 function App() {
   return (
     <div className={styles.app}>
-      <PageContextProvider init={{ history: ['chat'] }}>
+      <PageContextProvider init={{ history: ['login'] }}>
         <Router />
       </PageContextProvider>
     </div>

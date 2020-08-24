@@ -25,9 +25,7 @@ export default function Chat() {
 
     return <Panel
         header={
-            <Header
-                title="Chat"
-                onBack={() => console.log('back')} />
+            <Header title="Chat" />
         }
         body={
             <Scroll>
